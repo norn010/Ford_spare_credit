@@ -4,7 +4,7 @@
 
 ## Features
 
-- Dashboard สำหรับค้นหาเอกสารจาก `vw_SALES_CREDIT_RETURN`
+- Dashboard สำหรับนำเข้าและประมวลผลเอกสารจากไฟล์ Excel (รายการรับและต้นทุน)
 - ส่งรายการที่เลือกเข้า queue (`Automation_Queue_Spare_Credit`)
 - หน้า Automation Status ติดตามสถานะคิว
 - หน้า รายงานตัดชำระหนี้ (Automation)
