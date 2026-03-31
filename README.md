@@ -1,4 +1,4 @@
-﻿# Sales Credit Dashboard + Automate
+# Sales Credit Dashboard + Automate
 
 ระบบติดตามและจัดการงานตัดชำระหนี้อะไหล่เงินเชื่อ แบ่งเป็น `frontend` (React) และ `backend` (Express + SQL Server)
 
@@ -7,13 +7,14 @@
 - Dashboard สำหรับค้นหาเอกสารจาก `vw_SALES_CREDIT_RETURN`
 - ส่งรายการที่เลือกเข้า queue (`Automation_Queue_Spare_Credit`)
 - หน้า Automation Status ติดตามสถานะคิว
-- หน้า รายงานตัดชำระหนี้ อะไหล่เงินเชื่อ
-  - แก้ไขข้อมูลรายแถว
-  - เลือกหลายแถวสร้าง Batch ตัดชำระ
-  - เก็บข้อมูล Batch ลง `reconcile_batch` และรายละเอียดลง `reconcile_detail`
-- หน้า BPรายงานตัดชำระหนี้
-  - แก้ไขหมายเหตุ
-  - กด Save พร้อมยืนยัน แล้วเปลี่ยน `ส่งBP` เป็น `BPส่งกลับ`
+- หน้า รายงานตัดชำระหนี้ (Automation)
+  - แสดงรายการที่กำลังรอการประมวลผล (`automate_status = กำลังautomate`)
+  - ดูรายละเอียดเอกสารใบกำกับภาษีในแต่ละ Batch
+  - เก็บข้อมูลหลักลง `Debt_batch` และรายละเอียดรายใบกำกับลง `Debt_detail`
+- หน้า Automate Completed
+  - เลือกรายการที่เสร็จแล้วเพื่อสร้าง Batch ตัดชำระ
+  - ระบุ RS Document No, ค่าธรรมเนียม (Fee), ส่วนต่างเดบิต/เครดิต
+  - แสดงรายการใบกำกับภาษีที่จะถูกรวมเข้า Batch
 
 ## Tech Stack
 
@@ -57,8 +58,8 @@ DB_PASSWORD=your_password
 DB_ENCRYPT=false
 DB_TRUST_SERVER_CERTIFICATE=true
 
-QUEUE_DB_NAME=Spare_Credit
-AVAILABLE_DATABASES=GWM
+QUEUE_DB_NAME=Ford_Spare_Credit
+DB_DATABASES=GWM,OMODA
 ```
 
 รัน backend:
@@ -83,53 +84,39 @@ VITE_API_BASE_URL=http://localhost:5000/api
 
 ## SQL Scripts ที่ต้องรัน
 
-รันในฐานข้อมูล `Spare_Credit`:
+รันในฐานข้อมูล `Ford_Spare_Credit`:
 
-1. `backend/scripts/create-automate-queue.sql`
-   - ตาราง `Automation_Queue_Spare_Credit`
-2. `backend/scripts/create-debt-clearing.sql`
-   - ตาราง `Debt_Clearing`
-3. `backend/scripts/create-reconcile-batch.sql`
-   - ตาราง `reconcile_batch`
-   - ตาราง `reconcile_detail`
-   - รวมคอลัมน์บัญชีแยก code/name และ `[ยอดรวมสุทธิ]`
+1. `backend/scripts/init_db.js`
+   - รันเพื่อสร้างตาราง `Automation_Queue_Spare_Credit`, `Debt_batch`, `Debt_detail`
+   - (อัปเดตสม่ำเสมอเมื่อมีฟิลด์ใหม่)
 
 ## Main API
 
-- `GET /api/databases`
-- `GET /api/sales`
-- `POST /api/automate`
-- `GET /api/automate-queue`
-- `PUT /api/automate-queue/:id`
-- `POST /api/automate-queue/:id/send-to-debt-clearing`
-- `POST /api/debt-clearing-batch`
+- `GET /api/databases` (ดึงรายการฐานข้อมูล)
+- `GET /api/sales` (ดึงข้อมูลยอดขายจาก ERP)
+- `POST /api/automate` (ส่งรายการเข้า queue)
+- `GET /api/automate-queue` (ดึงสถานะคิว)
+- `POST /api/debt-clearing-batch` (สร้าง Batch ตัดชำระลง `Debt_batch`)
+- `GET /api/reconcile-batches` (ดึงรายการสรุป Batch)
+- `GET /api/reconcile-batches/:id/details` (ดึงรายการใบกำกับภาษีใน Batch)
 
 ## Debt Clearing Batch Payload (ตัวอย่าง)
 
 ```json
 {
-  "database_name": "GWM",
+  "database_name": "Ford_Spare_Credit",
   "branch": "10",
   "รหัสลูกค้า": "1TC_000000010",
   "rs_docno": "RS6902-004",
-  "bank_account": "1101-04-02",
-  "bank_account_name": "BAY 634-0-00147-5",
-  "ar_account": "1102-01-02",
-  "ar_account_name": "ลูกหนี้การค้า-ฝ่ายศูนย์บริการ/อะไหล่",
-  "fee_account": "6221-02-00",
-  "fee_account_name": "ค่าธรรมเนียมธนาคารและอื่นๆ-โคราช",
-  "diff_account": "6225-99-00",
-  "diff_account_name": "ส่วนต่างเงินสดจ่าย-เงินสดรับ",
-  "fee": 100,
+  "fee": 100.00,
   "diff_debit": 0,
   "diff_credit": 0,
-  "bank_statement": "confirm",
   "rows": [
     {
-      "id": 1,
+      "id": 12,
+      "Brand": "Ford",
       "invoice_no": "GCD26020017",
-      "pk_no": "",
-      "amount": 20174
+      "amount": 20174.50
     }
   ]
 }

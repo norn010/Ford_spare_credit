@@ -119,8 +119,8 @@ function AutomateCompleted() {
       bank_statement: batchForm.bank_statement || 'confirm',
       rows: selectedBatchRows.map((r) => ({
         id: r.id,
+        Brand: r.Brand ?? 'Ford',
         invoice_no: r['เลขที่ใบกำกับภาษี'] ?? '',
-        pk_no: '',
         amount: r['ราคารวมภาษี'] != null ? Number(r['ราคารวมภาษี']) : null,
       })),
     };

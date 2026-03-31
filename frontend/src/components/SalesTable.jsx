@@ -162,7 +162,7 @@ function SalesTable({ data, onSelectionChange, loading }) {
   }, [rowSelection, onSelectionChange]);
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden flex flex-col h-full max-h-[800px]">
+    <div className="bg-white rounded-[2rem] shadow-2xl border border-slate-200 overflow-hidden flex flex-col flex-1 min-h-0 relative">
       <div className="border-b border-slate-100 px-6 py-4 flex items-center justify-between bg-slate-50/50 shrink-0">
         <h2 className="text-sm font-bold text-slate-800 uppercase tracking-widest flex items-center gap-2">
           <span className="w-1.5 h-6 bg-primary-500 rounded-full" />

@@ -375,24 +375,32 @@ function Dashboard() {
           )}
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 py-4 bg-white/50 backdrop-blur-sm p-6 rounded-3xl border border-white/50 shadow-sm sticky top-0 z-30">
-          <div className="text-sm bg-primary-50/50 text-primary-700 px-6 py-2.5 rounded-full border border-primary-100 font-bold shadow-sm flex items-center gap-3">
-            <span className="w-2 h-2 bg-primary-500 rounded-full animate-pulse" />
-            Ready for Processing
+        {salesFile && (
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-6 py-6 bg-white p-8 rounded-[2rem] border border-slate-200 shadow-xl sticky top-4 z-40 animate-in slide-in-from-top-8 duration-500">
+            <div className="flex flex-col gap-1">
+              <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Status</div>
+              <div className="text-sm bg-emerald-50 text-emerald-700 px-4 py-1.5 rounded-full border border-emerald-100 font-bold flex items-center gap-3">
+                <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                Ready for Processing
+              </div>
+            </div>
+            <button
+              onClick={handleProcess}
+              disabled={loadingSales || !salesFile}
+              className="w-full sm:w-auto bg-primary-600 hover:bg-primary-700 active:scale-95 text-white font-extrabold py-5 px-16 rounded-2xl shadow-2xl shadow-primary-200 transition-all disabled:opacity-50 disabled:active:scale-100 flex items-center justify-center gap-4 text-xl"
+            >
+              {loadingSales ? (
+                <>
+                  <svg className="animate-spin h-6 w-6 text-white" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>กำลังประมวลผล...</span>
+                </>
+              ) : 'ประมวลผลข้อมูล'}
+            </button>
           </div>
-          <button
-            onClick={handleProcess}
-            disabled={loadingSales || !salesFile}
-            className="w-full sm:w-auto bg-primary-600 hover:bg-primary-700 active:scale-95 text-white font-extrabold py-4 px-12 rounded-2xl shadow-xl shadow-primary-200 transition-all disabled:opacity-50 disabled:active:scale-100 flex items-center justify-center gap-4 text-lg"
-          >
-            {loadingSales ? (
-              <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-            ) : 'ประมวลผลข้อมูล'}
-          </button>
-        </div>
+        )}
 
         <div id="sales-data-table" className="flex flex-col gap-6 pt-4 animate-in fade-in duration-700">
           <div className="shrink-0 flex items-center justify-between px-2">
@@ -414,7 +422,7 @@ function Dashboard() {
               loading={loadingAutomate}
             />
           </div>
-          <div className="flex-1 min-h-[600px] flex flex-col bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200">
+          <div className="flex-1 min-h-[600px] flex flex-col">
             <SalesTable
               data={salesData}
               onSelectionChange={setSelectedRows}
