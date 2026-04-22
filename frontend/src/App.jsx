@@ -4,6 +4,7 @@ import AutomateStatus from './pages/AutomateStatus';
 import AutomateCompleted from './pages/AutomateCompleted';
 import BPReport from './pages/BPReport';
 import AutomationReconcileReport from './pages/AutomationReconcileReport';
+import AccountExPage from './pages/AccountExPage';
 
 function App() {
   return (
@@ -62,6 +63,15 @@ function App() {
           >
             Automation รายงานตัดชำระหนี้
           </NavLink>
+          <NavLink
+            to="/account-ex"
+            className={({ isActive }) =>
+              `flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive ? 'bg-slate-800 text-white' : 'text-slate-300 hover:bg-slate-800/60'
+              }`
+            }
+          >
+            ผังบัญชีและEX code
+          </NavLink>
         </nav>
         <div className="px-4 py-3 border-t border-slate-800 text-xs text-slate-500">
           &copy; {new Date().getFullYear()} Credit Automation
@@ -78,6 +88,7 @@ function App() {
             path="/automation-reconcile-report"
             element={<AutomationReconcileReport />}
           />
+          <Route path="/account-ex" element={<AccountExPage />} />
         </Routes>
       </main>
     </div>
