@@ -147,7 +147,7 @@ export default function BrandAccPage() {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase text-xs font-semibold tracking-wider">
-              {['Brand', 'Branch', 'Shorts', 'Acc1', 'Acc2', 'Acc3'].map((col) => (
+              {['Brand', 'Branch', 'Shorts', 'รายได้ขายอะไหล่', 'ต้นทุนขายอะไหล่', 'สินค้าคงเหลือ'].map((col) => (
                 <th 
                   key={col} 
                   className="p-4 cursor-pointer hover:bg-slate-100 transition-colors group"
