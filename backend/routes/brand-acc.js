@@ -28,18 +28,17 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:brand/:branch', async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
-    const { brand, branch } = req.params;
+    const { id } = req.params;
     const { Brand, Branch, Shorts, Acc1, Acc2, Acc3 } = req.body;
     const dbName = getQueueDatabaseName();
     await executeQuery(dbName, `
       UPDATE Brand_Acc_Tb 
       SET Brand=@Brand, Branch=@Branch, Shorts=@Shorts, Acc1=@Acc1, Acc2=@Acc2, Acc3=@Acc3
-      WHERE Brand=@oldBrand AND Branch=@oldBranch
+      WHERE ID=@ID
     `, {
-      oldBrand: brand,
-      oldBranch: branch,
+      ID: id,
       Brand, Branch, Shorts, Acc1, Acc2, Acc3
     });
     res.json({ message: 'Updated successfully' });
@@ -48,15 +47,14 @@ router.put('/:brand/:branch', async (req, res) => {
   }
 });
 
-router.delete('/:brand/:branch', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
-    const { brand, branch } = req.params;
+    const { id } = req.params;
     const dbName = getQueueDatabaseName();
     await executeQuery(dbName, `
-      DELETE FROM Brand_Acc_Tb WHERE Brand=@Brand AND Branch=@Branch
+      DELETE FROM Brand_Acc_Tb WHERE ID=@ID
     `, {
-      Brand: brand,
-      Branch: branch
+      ID: id
     });
     res.json({ message: 'Deleted successfully' });
   } catch (err) {

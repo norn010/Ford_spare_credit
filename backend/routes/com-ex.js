@@ -28,18 +28,17 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:brand/:branch', async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
-    const { brand, branch } = req.params;
+    const { id } = req.params;
     const { Brand, Branch, LoneCode, ExpressCode, Cusname } = req.body;
     const dbName = getQueueDatabaseName();
     await executeQuery(dbName, `
       UPDATE Com_Ex_Tb 
       SET Brand=@Brand, Branch=@Branch, LoneCode=@LoneCode, ExpressCode=@ExpressCode, Cusname=@Cusname
-      WHERE Brand=@oldBrand AND Branch=@oldBranch
+      WHERE ID=@ID
     `, {
-      oldBrand: brand,
-      oldBranch: branch,
+      ID: id,
       Brand, Branch, LoneCode, ExpressCode, Cusname
     });
     res.json({ message: 'Updated successfully' });
@@ -48,15 +47,14 @@ router.put('/:brand/:branch', async (req, res) => {
   }
 });
 
-router.delete('/:brand/:branch', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
-    const { brand, branch } = req.params;
+    const { id } = req.params;
     const dbName = getQueueDatabaseName();
     await executeQuery(dbName, `
-      DELETE FROM Com_Ex_Tb WHERE Brand=@Brand AND Branch=@Branch
+      DELETE FROM Com_Ex_Tb WHERE ID=@ID
     `, {
-      Brand: brand,
-      Branch: branch
+      ID: id
     });
     res.json({ message: 'Deleted successfully' });
   } catch (err) {
